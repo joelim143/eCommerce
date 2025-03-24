@@ -93,7 +93,7 @@ class CartItem(models.Model):
     qty = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)  # Price per unit
     discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Discount per unit
-    line_total = models.DecimalField(max_digits=10, decimal_places=2, editable=False)
+    line_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def save(self, *args, **kwargs):
         # Calculate the line total
