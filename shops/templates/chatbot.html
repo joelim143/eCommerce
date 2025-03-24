@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Chatbot{% endblock %}
+
+{% block content %}
+<h2>Chatbot</h2>
+{% if user.is_authenticated %} <!-- Check if the user is authenticated (ie. login) -->
+    <form id="chatForm" method="post">
+        {% csrf_token %} <!-- inserts a hidden field containing a CSRF (Cross-Site Request Forgery) token for security. -->
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+
+    <div id="chatHistory">
+        <h3>Chat History</h3>
+        <ul>
+            {% for chat in chat_history %}
+                <li>
+                    <strong>You:</strong> {{ chat.user_message }}<br>
+                    <strong>Bot:</strong> {{ chat.bot_response|safe }}
+                </li>
+            {% empty %}
+                <li>No chats yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('#chatForm').on('submit', function(e){
+            e.preventDefault();
+            // Get the message from the textarea; assumes the form field has id "id_user_message"
+            var message = $('#id_user_message').val();
+            if ($.trim(message) === "") {
+                alert("Please enter a message.");
+                return;
+            }
+            $.ajax({
+                url: "{% url 'Shops:chatbot_response' %}",
+                type: "POST",
+                data: JSON.stringify({"message": message}),
+                contentType: "application/json",
+                headers: {"X-CSRFToken": "{{ csrf_token }}"},
+                success: function(data){
+                    if (data.response) {
+                        // Append the new chat to the chat history list
+                        var newChat = '<li><strong>You:</strong> ' + message + '<br><strong>Bot:</strong> ' + data.response + '</li>';
+                        $('#chatHistory ul').append(newChat);
+                        // Clear the input field
+                        $('#id_user_message').val('');
+                    } else if (data.error) {
+                        alert("Error: " + data.error);
+                    }
+                },
+                error: function(xhr, errmsg, err){
+                    alert("An error occurred: " + errmsg);
+                }
+            });
+        });
+    });
+    </script>
+{% else %}
+    <p>You need to <a href="{% url 'Shops:login' %}">login</a> to chat with the bot.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Purchase Confirmation{% endblock %}
+
+{% block content %}
+<h1>Purchase Confirmation</h1>
+
+<p>Thank you for your purchase!</p>
+
+<h2>Purchase Details:</h2>
+<p><strong>Purchase Date:</strong> {{ purchase_history.purchase_date }}</p>
+<p><strong>Total Amount:</strong> {{ purchase_history.total_amount }}</p>
+
+<h3>Items Purchased:</h3>
+<ul>
+    {% for item in purchase_history.items.all %}
+        <li>{{ item.product.description }} - ${{ item.price }} x {{ item.qty }}</li>
+    {% endfor %}
+</ul>
+
+<p>You can view your purchase history in your account.</p>
+
+{% endblock %}

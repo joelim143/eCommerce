@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block content %}
+<h1>Your Cart</h1>
+{% if cart_items %}
+<table class="table table-bordered product-table">
+    <thead>
+        <tr>
+            <th>S/N</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Line Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td style="max-width: 1000px; overflow-wrap: break-word; word-wrap: break-word;">
+                <div style="display: flex; align-items: center;">
+                    <img src="/media/{{ item.product.code }}.png" alt="Product Image" width="150px" style="margin-right: 10px;">
+                    {{ item.product.description }}
+                </div>
+            </td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.qty }}</td>
+            <td>{{ item.line_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p><strong>Total:</strong> ${{ cart.total }}</p>
+<form method="post" action="{% url 'purchase_cart' %}">
+    {% csrf_token %}
+    <button type="submit">Purchase</button>
+</form>
+{% else %}
+<p>Your cart is empty.</p>
+{% endif %}
+<style>
+    .product-table th,
+    .product-table td{
+        padding: 12px;
+    }
+    .product-table td:nth-child(2) { /* Target the "Product" column */
+        max-width: 400px; /* Adjust width as needed */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .product-table td:nth-child(3), 
+    .product-table td:nth-child(4) {
+        white-space: nowrap; /* Prevents wrapping for Price and Actions */
+    }
+
+    .product-table td {
+        padding-right: 20px; /* Adds more space between columns */
+    }
+
+</style>
+{% endblock %}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Django App{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .branding {
+      display: flex;
+      align-items: center;
+    }
+    .logo {
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+    nav ul li a:hover {
+      background-color: #555;
+    }
+    .btn {
+      background-color: #007bff;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px 0;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="branding">
+      <a href="{% url 'home' %}">
+        <img src="{% static 'images/smartshop_logo.png' %}" alt="Brand Logo" class="logo">
+      </a>
+      <h1>My SmartShop</h1>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="{% url 'product_list' %}">Products</a></li>
+        <li><a href="{% url 'customer_list' %}">Customers</a></li>
+        <li><a href="{% url 'cart_detail' %}">Cart</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'profile' %}">Profile</a></li>
+          <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+          <li><a href="{% url 'login' %}" class="btn">Login</a></li>
+          <li><a href="{% url 'signup' %}" class="btn">Sign Up</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}
+      <!-- Page-specific content will go here -->
+    {% endblock %}
+  </main>
+
+  <footer>
+    <p>&copy; 2025 My Django App</p>
+  </footer>
+
+  <!-- Scripts placed at the end of body for better performance -->
+  <script src="http://localhost:8001/copilot/index.js"></script>
+  <script>
+    window.mountChainlitWidget({
+      chainlitServer: "http://localhost:8001",
+    });
+    window.addEventListener("chainlit-call-fn", (e) => {
+      const { name, args, callback } = e.detail;
+      if (name === "test") {
+        callback(args.response);
+      }
+    });
+    var interval = setInterval(function() {
+      if (document.querySelector('.watermark')) {
+        clearInterval(interval);
+        document.querySelector('.watermark').style.display = 'none';
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

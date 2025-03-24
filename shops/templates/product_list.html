@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Product List{% endblock %}
+
+{% block content %}
+<h1>Product List</h1>
+
+<a href="{% url 'home' %}" class="btn btn-secondary mb-3">Home</a>
+<a href="{% url 'product_add' %}" class="btn btn-primary mb-3">Add New Product</a>
+<br><br>
+
+<form method="get" action="{% url 'product_list' %}" class="mb-3">
+  <input type="text" name="query" placeholder="Search products..." value="{{ request.GET.query|default:'' }}">
+  <button type="submit" class="btn btn-outline-primary">Search</button>
+</form>
+<br><br>
+
+<table class="table table-bordered table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th style="width: 200px;">Image</th>
+      <th>Product Code</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in products %}
+    <tr>
+      <td style="width:200px; height:200px;">
+        {% if product.code %}
+          <img src="/media/{{ product.code }}.png" alt="{{ product.code }}" 
+               style="width:100%; height:100%; object-fit: cover;">
+        {% else %}
+          <img src="{% static 'placeholder.png' %}" alt="Placeholder" 
+               style="width:100%; height:100%; object-fit: cover;">
+        {% endif %}
+      </td>
+      <td>{{ product.code }}</td>
+      <td>
+        <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-info mb-1">View Details</a>
+        <a href="{% url 'product_feedback' product.id %}" class="btn btn-sm btn-warning mb-1">Submit Feedback</a>
+        <button type="button" class="btn btn-sm btn-success mb-1" onclick="addToCart('{{ product.id }}')">
+          Add to Cart
+        </button>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3" class="text-center">No products found.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script>
+  function addToCart(productId) {
+    fetch("{% url 'add_to_cart' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ product_id: productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Product added to cart!');
+      } else if (data.error) {
+        alert(data.error);
+      }
+    })
+    .catch(error => {
+      console.error('Error adding to cart:', error);
+      alert('An error occurred. Please try again.');
+    });
+  }
+</script>
+{% endblock %}

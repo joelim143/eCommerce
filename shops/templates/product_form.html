@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Product Form{% endblock %}
+
+{% block content %}
+<h1>Add Product</h1>
+<form method="post" id="product-form" style="display: flex; flex-direction: column; width: 300px;" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <label for="id_code">Product Code:</label>
+    {{ form.code }}
+    
+    <label for="id_prompt">Prompt:</label>
+    {{ form.prompt }}
+    
+    <button type="button" id="generate-description" style="margin-top: 10px;">Generate Description</button>
+    
+    <label for="id_description" style="margin-top: 10px;">Description:</label>
+    {{ form.description }}
+    
+    <label for="id_price" style="margin-top: 10px;">Price:</label>
+    {{ form.price }}
+    
+    <label for="id_qty" style="margin-top: 10px;">Quantity:</label>
+    {{ form.qty }}
+    
+    <label for="id_image" style="margin-top: 10px;">Product Image:</label>
+    {{ form.image }}
+
+    <button type="submit" style="margin-top: 20px;">Save Product</button>
+</form>
+
+<script>
+    document.getElementById('generate-description').addEventListener('click', function() {
+        const promptField = document.getElementById('id_prompt');
+        const promptValue = promptField.value.trim();
+
+        if (!promptValue) {
+            alert('Please enter a prompt to generate the description.');
+            return;
+        }
+
+        // AJAX request to call the Django method
+        fetch("{% url 'generate_description' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: new URLSearchParams({ prompt: promptValue }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.description) {
+                // Set the generated description in the description field
+                const descriptionField = document.getElementById('id_description');
+                descriptionField.value = data.description;
+            } else if (data.error) {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error generating description:', error);
+            alert('An error occurred while generating the description.');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+'shops_cartitem',
+ 'CREATE TABLE shops_cartitem (
+    \n id bigint NOT NULL AUTO_INCREMENT,
+    \n qty int unsigned NOT NULL,
+    \n price decimal(10,2) NOT NULL,
+    \n discount decimal(10,2) NOT NULL,
+    \n line_total decimal(10,2) NOT NULL,
+    \n cart_id bigint NOT NULL,\n product_id bigint NOT NULL,
+    \n PRIMARY KEY (id),
+    \n KEY shops_cartitem_cart_id_3036b566_fk_shops_cart_id (cart_id),
+    \n KEY shops_cartitem_product_id_ac2ffeb2_fk_shops_product_id (product_id),
+    \n CONSTRAINT shops_cartitem_cart_id_3036b566_fk_shops_cart_id FOREIGN KEY (cart_id) REFERENCES shops_cart (id),
+    \n CONSTRAINT shops_cartitem_product_id_ac2ffeb2_fk_shops_product_id FOREIGN KEY (product_id) REFERENCES shops_product (id),
+    \n CONSTRAINT shops_cartitem_chk_1 CHECK ((qty >= 0))
+    \n) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci'
+
+
+0002 4G GPS Smart Watch for Kids Phone Smartwatch with WhatsApp Anti-Lost Waterproof Video Phone Call Pedometer Voice Message Camera SOS Alarm Real-time Tracking Watch for Boys Girls 3-12 Gifts Blue
+0003 Shopify POS Tablet Stand (Lightning) 219.00
+ 
+ Detachable case lets you use your tablet around the store or use the built-in lock to keep it in place
+ Tablet flips to let customers review their purchase and complete checkout
+ Keeps your tablet charged and ready to use
+ USB ports let you charge two other devices, such as your card reader and barcode scanner, right from the stand
+
+iPhone 16 Pro Max 256GB 1499.00
+Apple Watch Series 9 GPS 45mm 429.00
+iPad Pro 799.00

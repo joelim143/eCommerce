@@ -1,0 +1,70 @@
+<!-- templates/product_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}Manage Products{% endblock %}
+
+{% block content %}
+<h1>Manage Products</h1>
+<!-- <a href="{% url 'product_add' %}" class="btn btn-primary mb-3">Add Product</a> -->
+<table class="table table-bordered product-table">
+    <thead>
+        <tr>
+            <th>Product ID</th>
+            <th>The Product</th>
+            <!-- <th>Spec</th> -->
+            <th>Price</th>
+            {% if username == 'admin1' %}
+                <th>Actions</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.id }}</td>
+            <!-- <td style="max-width: 1000px; overflow-wrap: break-word; word-wrap: break-word;">
+                {{ product.description }}
+            </td> -->
+            <td style="max-width: 1000px; overflow-wrap: break-word; word-wrap: break-word;">
+                <p align="center">
+                    <img src="/media/{{ product.code }}.png" alt="Product Image" width="300px">
+                </p>
+                <br>
+                {{ product.description }}
+            </td>
+            <!-- <td> {{ product.specification }} </td> -->
+            <td>${{ product.price }}</td>
+            {% if username == 'admin1' %}
+                <td>
+                    <br>
+                    <a href="{% url 'product_edit' product.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <br><br>
+                    <a href="{% url 'product_delete' product.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<style>
+    .product-table th,
+    .product-table td{
+        padding: 12px;
+    }
+    .product-table td:nth-child(2) { /* Target the "Product" column */
+        max-width: 400px; /* Adjust width as needed */
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .product-table td:nth-child(3), 
+    .product-table td:nth-child(4) {
+        white-space: nowrap; /* Prevents wrapping for Price and Actions */
+    }
+
+    .product-table td {
+        padding-right: 20px; /* Adds more space between columns */
+    }
+
+</style>
+{% endblock %}
